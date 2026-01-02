@@ -1,13 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
-    <title>Cyber Port Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAROL-KOGA @ PORT-SCANNER-GAME</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <h1>Bem-vinda ao Port Quiz, Carol!</h1>
-    <p>Sua pontuação atual: {{ score }}</p>
-    <div id="game-area">
+    <div id="terminal">
+        <div class="stats">
+            <span>USER: CAROL_KOGA</span>
+            <span>SCORE: <span id="score-val">{{ score }}</span></span>
         </div>
+
+        <div id="output">
+            <p>[+] SCANNER INICIALIZADO...</p>
+            <p>[+] ALVO: <span id="target-ip">192.168.1.100</span> (VULNERABLE)</p>
+            <hr style="border: 0.5px solid #333; margin: 10px 0;">
+
+            <p style="color: yellow;">[!] DESAFIO: Qual a SIGLA da porta <span id="port-num">--</span>?</p>
+
+            <div id="result-details"
+                style="display: none; margin: 15px 0; padding: 10px; border-left: 3px solid #00ff41; background: rgba(0, 255, 65, 0.05);">
+                <p style="margin: 5px 0;"><strong>DESCRIÇÃO:</strong> <span id="det-desc">--</span></p>
+                <p style="margin: 5px 0;"><strong>STATUS:</strong> <span id="det-status">--</span></p>
+                <p style="margin: 5px 0;"><strong>CATEGORIA:</strong> <span id="det-cat">--</span></p>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin-top: 20px;">
+            <span style="color: #00ff41; font-weight: bold;">$ root@kali:~#&nbsp;</span>
+            <input type="text" id="user-input" autofocus autocomplete="off">
+            <span class="cursor"></span>
+        </div>
+
+        <p id="feedback" style="margin-top: 15px; font-weight: bold;"></p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 </body>
+
 </html>

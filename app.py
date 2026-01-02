@@ -7,12 +7,19 @@ from sqlalchemy.sql.expression import func
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("'SECRET_KEY", 'cyber-koga-secret')
+app.secret_key = os.getenv('SECRET_KEY', 'cyber-koga-secret')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+db_url = os.getenv('DATABASE_URL')
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def index():
@@ -22,33 +29,40 @@ def index():
 
 @app.route('/get_challenge', methods=['GET'])
 def get_challenge():
-    desafio = Desafio.query.order_by(func.random()).first()
-    if desafio:
-        return jsonify(desafio.to_dict())
-    return jsonify({"error": "Nenhum desafio encontrado"}), 404
+    try:
+        desafio = Desafio.query.order_by(func.random()).first()
+        if desafio:
+            return jsonify(desafio.to_dict())
+        return jsonify({"error": "Banco de dados vazio ou erro de conexão"}), 404
+    except Exception as e:
+        print(f"ERRO DE BANCO: {e}")
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/check_answer',methods=['POST'])
+@app.route('/check_answer', methods=['POST'])
 def check_answer():
     data = request.json
     desafio_id = data.get('id')
     user_sigla = data.get('sigla', '').strip().upper()
 
-    desafio = Desafio.query.get(desafio_id)
+    desafio = db.session.get(Desafio, desafio_id)
 
-    if desafio and desafio.sigla.upper() == user_sigla:
-        session['score'] == 10
+    if not desafio:
+        return jsonify({"error": "Desafio não encontrado"}), 404
+
+    if desafio.sigla.upper() == user_sigla:
+        session['score'] += 10
         return jsonify({
             "correct": True,
-            "message": "Correto! +10 pontos.",
+            "message": "ACCESS GRANTED! Sigla correta.",
             "new_score": session['score'],
-            "details": dasefio.to_dict()
+            "details": desafio.to_dict()
         })
-
     else: 
         return jsonify({
             "correct": False, 
-            "message": f"Incorreto. A sigla correta era {desafio.sigla}",
-            "new_score": session['score']
+            "message": f"ACCESS DENIED! A sigla correta era {desafio.sigla}.",
+            "new_score": session['score'],
+            "details": desafio.to_dict()
         })
 
 if __name__ == "__main__":

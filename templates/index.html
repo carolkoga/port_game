@@ -18,12 +18,12 @@
         <div id="output">
             <p>[+] SCANNER INICIALIZADO...</p>
             <p>[+] ALVO: <span id="target-ip">192.168.1.100</span> (VULNERABLE)</p>
-            <hr style="border: 0.5px solid #333; margin: 10px 0;">
+            <hr style="border: 0.5px solid #ebebeb; margin: 10px 0;">
 
             <p style="color: yellow;">[!] DESAFIO: Qual a SIGLA da porta <span id="port-num">--</span>?</p>
 
             <div id="result-details"
-                style="display: none; margin: 15px 0; padding: 10px; border-left: 3px solid #00ff41; background: rgba(0, 255, 65, 0.05);">
+                style="display: none; margin: 15px 0; padding: 10px; border-left: 3px solid #0b7024; background: rgb(14, 14, 14);">
                 <p style="margin: 5px 0;"><strong>DESCRIÇÃO:</strong> <span id="det-desc">--</span></p>
                 <p style="margin: 5px 0;"><strong>STATUS:</strong> <span id="det-status">--</span></p>
                 <p style="margin: 5px 0;"><strong>CATEGORIA:</strong> <span id="det-cat">--</span></p>
@@ -31,12 +31,17 @@
         </div>
 
         <div style="display: flex; align-items: center; margin-top: 20px;">
-            <span style="color: #00ff41; font-weight: bold;">$ root@kali:~#&nbsp;</span>
+            <span style="color: #e46432; font-weight: bold;">$ root@kali:~#&nbsp;</span>
             <input type="text" id="user-input" autofocus autocomplete="off">
             <span class="cursor"></span>
         </div>
 
         <p id="feedback" style="margin-top: 15px; font-weight: bold;"></p>
+
+        <button id="next-btn"
+            style="display: none; margin-top: 20px; background: #313131; color: #00ff41; border: 1px solid #00ff41; padding: 10px 20px; cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold; text-transform: uppercase;">
+            [ >> SEGUIR PARA O PRÓXIMO ALVO ]
+        </button>
     </div>
 
     <script src="{{ url_for('static', filename='js/game.js') }}"></script>
